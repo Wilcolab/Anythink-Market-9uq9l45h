@@ -12,6 +12,10 @@ const Routers: React.FC = () => {
     const [Error, setError] = useState<string>('');
     const [isLoading, toggleLoading] = useState<boolean>(true);
     const [selectedRouter, setSelectedRouter] = useState<BaseRouter | null>(null);
+    const [filterType, setFilterType] = useState<BaseRouter['type'] | 'all'>('all');
+    const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
+    const [sortBy, setSortBy] = useState<'name' | 'updatedAt'>('name');
+
 
     useEffect(() => {
         const fetchRouters = async () => {
@@ -35,6 +39,32 @@ const Routers: React.FC = () => {
       setSelectedRouter(selectedRouter?.id === router.id ? null : router);
     }
 
+    const handleFilterChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        setFilterType(event.target.value as BaseRouter['type'] | 'all');
+    }
+
+    const handleSortChange = (field: 'name' | 'updatedAt') => {
+        if(sortBy === field) {
+            setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+        } else {
+            setSortBy(field);
+            setSortDirection('asc');
+        }
+    } 
+
+    const filterRouters = filterType === "all" ? routers : routers.filter(router => router.type === filterType);
+
+    const sortedRouters = [...filterRouters].sort((a, b) => {
+        const aValue = a[sortBy];
+        const bValue = b[sortBy];
+    
+        if (typeof aValue === 'string' && typeof bValue === 'string') {
+          return sortDirection === 'asc' ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue);
+        } else {
+          return sortDirection === 'asc' ? (aValue > bValue ? 1 : -1) : (aValue < bValue ? 1 : -1);
+        }
+      });
+    
     if(Error.length) {
         return <div className="error">Oops something went wrong...</div>
     }
@@ -47,21 +77,32 @@ const Routers: React.FC = () => {
     return (
         <div className="routers-page">
             <div className="router-list-container">
-                <h3>Routers</h3>
+                <div className="routers-title">
+                    <h3>Routers</h3>
+                    <div className="filteredBy">
+                        <label>Filter by Type: </label>
+                        <select id="filterType" value={filterType} onChange={handleFilterChange}>
+                            <option value="all">All</option>
+                            <option value="wifi">WiFi</option>
+                            <option value="enterprise">Enterprise</option>
+                            <option value="home">Home</option>
+                        </select>
+                    </div>
+                </div>
                 <table className="router-list">
                     <thead>
                         <tr>
                             <th>Type</th>
-                            <th>Name</th>
-                            <th>Updated At</th>
+                            <th onClick={() => handleSortChange('name')}>Name</th>
+                            <th onClick={() => handleSortChange('updatedAt')}>Updated At</th>
                         </tr>
                     </thead>
                     <tbody>
-                    {routers.map((router: BaseRouter) => {
+                    {sortedRouters.map((router: BaseRouter) => {
                         return (
                             <tr key={router.id} className={`router-list-row ${selectedRouter?.id === router.id && 'selected'}`} onClick={() => handleRouterSelect(router)}>
-                                <td className="router-list-item-name">{router.name}</td>
                                 <td className="router-list-item-type">{router.type}</td> 
+                                <td className="router-list-item-name">{router.name}</td>       
                                 <td className="router-list-item-update-at">{formatted(router.updatedAt)}</td>
                             </tr>
                         )
