@@ -1,0 +1,12 @@
+.details-type-container {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid darkblue;
+    padding: 10px 20px;
+}
+
+.details-row {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}
