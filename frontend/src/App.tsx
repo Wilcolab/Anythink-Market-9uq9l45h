@@ -1,5 +1,6 @@
 import React from 'react';
 import './App.css';
+import Routers from './RouterList/Routers';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
               We're working on something exciting! The DriveNets Dashboard is currently under development.
               Stay tuned for a powerful network management interface.
             </p>
+            <Routers/>
           </div>
         </div>
       </main>
