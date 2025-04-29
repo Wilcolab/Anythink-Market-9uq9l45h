@@ -1,0 +1,48 @@
+.router-list-container {
+    display: flex;
+    padding: 20px;
+    place-content: center;
+    flex-direction: column;
+}
+
+.router-list-title {
+    align-self: flex-start;
+    font-size: large;
+    margin-bottom: 10px;
+    text-decoration: underline;
+}
+
+.loading, .error {
+    display: flex;
+    place-content: center;
+    color: blue;
+    font-style: italic;
+}
+
+.error {
+    color: red;
+    font-weight: bold;
+}
+
+.router-list {
+    text-align: left;
+    height: 500px;
+    display: block;
+    overflow-y: scroll;
+    border: 1px solid black;
+    padding: 20px;
+}
+
+.router-list th, .router-list td {
+    border: 1px solid darkblue;
+    padding: 10px;
+    text-align: left;
+}
+.router-list-row {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+
+
